@@ -25,7 +25,9 @@ jobs:
       run: |
         emcc *.cpp -o index.html libraylib.a -Os -Wall \
         -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 \
-        -s GL_ENABLE_GET_PROC_ADDRESS=1 -DPLATFORM_WEB
+        -s GL_ENABLE_GET_PROC_ADDRESS=1 -DPLATFORM_WEB \
+        --shell-file html_template.html
+
 
     - name: Deploy Game to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
