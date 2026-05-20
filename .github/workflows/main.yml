@@ -1,0 +1,15 @@
+name: Compile C++ EXE
+on: [push]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Compile Folder
+      run: |
+        g++ *.cpp -o game.exe
+    - name: Upload EXE
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-windows-game
+        path: game.exe
