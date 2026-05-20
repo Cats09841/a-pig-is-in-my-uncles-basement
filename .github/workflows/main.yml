@@ -1,31 +1,31 @@
-name: Compile C++ EXE with Raylib
+name: Compile C++ to HTML5 Website
 on: [push]
 
 jobs:
-  build:
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
+  build-web:
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Setup MSYS2 and Install Raylib
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: MINGW64
-        update: true
-        install: >-
-          mingw-w64-x86_64-gcc
-          mingw-w64-x86_64-raylib
+    - name: Setup Emscripten (Web Compiler)
+      uses: mymindstorm/setup-emsdk@v14
 
-    - name: Compile C++ Folder
+    - name: Download and Build Raylib for Web
       run: |
-        g++ *.cpp -o game.exe -lraylib -lopengl32 -lgdi32 -lwinmm
+        git clone --depth 1 https://github.com
+        cd raylib/src
+        make PLATFORM=PLATFORM_WEB
+        cd ../..
 
-    - name: Upload Finished EXE
-      uses: actions/upload-artifact@v4
+    - name: Compile Folder into Website
+      run: |
+        emcc *.cpp -o index.html -Os -Wall -I./raylib/src ./raylib/src/libraylib.a \
+        -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 \
+        -DPLATFORM_WEB
+
+    - name: Deploy Game to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        name: my-windows-game
-        path: game.exe
+        folder: .
+        branch: gh-pages
