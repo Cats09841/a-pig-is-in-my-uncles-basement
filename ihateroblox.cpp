@@ -36,7 +36,7 @@ int hashValue(double x, double y, const std::vector<int>& perm) {
     int floorY = static_cast<int>(std::floor(y)) & 255;
     return perm[perm[floorX] + floorY];
 }
-double lerp(double value1, double value2, double interpolationFactor){
+double myLerp(double value1, double value2, double interpolationFactor){
 return ((1-interpolationFactor)*value1)+(interpolationFactor*value2);
 }
 double smootherStep(double x){
@@ -85,9 +85,9 @@ double perlinNoise(int squareSize, int x, int y, const std::vector<int>& perm) {
     double u = smootherStep(decamalX);
     double v = smootherStep(decamalY);
 
-    double lerpTop    = ::lerp(dotProductTopLeft,    dotProductTopRight,    u);
-    double lerpBottom = ::lerp(dotProductBottomLeft, dotProductBottomRight, u);
-    double lerpFinal  = ::lerp(lerpTop,              lerpBottom,            v);
+    double lerpTop    = myLerp(dotProductTopLeft,    dotProductTopRight,    u);
+    double lerpBottom = myLerp(dotProductBottomLeft, dotProductBottomRight, u);
+    double lerpFinal  = myLerp(lerpTop,              lerpBottom,            v);
 
     return (lerpFinal + 1.0) / 2.0;
 }
