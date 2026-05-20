@@ -26,6 +26,7 @@ jobs:
         emcc *.cpp -o index.html libraylib.a -Os -Wall \
         -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 \
         -s GL_ENABLE_GET_PROC_ADDRESS=1 -DPLATFORM_WEB \
+        -s SINGLE_FILE=1 \
         --shell-file html_template.html
 
 
