@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Raylib Game Debugger</title>
+    <style>
+        body { background: #222; color: #fff; font-family: sans-serif; text-align: center; }
+        canvas { background: #000; display: block; margin: 10px auto; max-width: 100%; }
+        #output { width: 80%; height: 150px; margin: 20px auto; background: #000; color: #0f0; font-family: monospace; padding: 10px; text-align: left; overflow-y: scroll; border: 2px solid #555; }
+    </style>
+</head>
+<body>
+    <h2>My Raylib Game Output</h2>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <h3>Live Console Logs:</h3>
+    <textarea id="output" readonly></textarea>
+
+    <script>
+        var Module = {
+            canvas: document.getElementById('canvas'),
+            print: (function() {
+                var element = document.getElementById('output');
+                return function(text) {
+                    if (element) { element.value += text + "\n"; element.scrollTop = element.scrollHeight; }
+                };
+            })(),
+            printErr: function(text) {
+                var element = document.getElementById('output');
+                if (element) { element.value += "ERROR: " + text + "\n"; element.scrollTop = element.scrollHeight; }
+            }
+        };
+        window.onerror = function(event) {
+            document.getElementById('output').value += "CRASH EXCEPTION: " + event + "\n";
+        };
+    </script>
+    {{{ SCRIPT }}}
+</body>
+</html>
