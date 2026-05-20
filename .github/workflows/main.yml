@@ -1,6 +1,9 @@
 name: Compile C++ to HTML5 Website
 on: [push]
 
+permissions:
+  contents: write
+
 jobs:
   build-web:
     runs-on: ubuntu-latest
@@ -11,18 +14,14 @@ jobs:
     - name: Setup Emscripten (Web Compiler)
       uses: mymindstorm/setup-emsdk@v14
 
-    - name: Download and Build Raylib for Web
+    - name: Download Precompiled Raylib Web Files
       run: |
-        git clone --depth 1 https://github.com
-        cd raylib/src
-        make PLATFORM=PLATFORM_WEB
-        cd ../..
+        sudo apt-get update
+        sudo apt-get install -y libraylib-dev
 
     - name: Compile Folder into Website
       run: |
-        emcc *.cpp -o index.html -Os -Wall -I./raylib/src ./raylib/src/libraylib.a \
-        -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 \
-        -DPLATFORM_WEB
+        emcc *.cpp -o index.html -Os -Wall -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s USE_RAYLIB=1 -DPLATFORM_WEB
 
     - name: Deploy Game to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
